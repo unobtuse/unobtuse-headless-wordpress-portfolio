@@ -2,7 +2,7 @@
 /**
  * WPGraphQL Integration Class
  * 
- * Handles integration with WPGraphQL plugin to expose custom content
+ * Handles WPGraphQL integration for custom post types and fields
  */
 
 // Prevent direct access
@@ -10,314 +10,326 @@ if (!defined('ABSPATH')) {
     exit;
 }
 
-class Unobtuse_Portfolio_WPGraphQL_Integration {
+class UnobtusePo_WPGraphQL_Integration {
     
     /**
      * Constructor
      */
     public function __construct() {
-        add_action('graphql_register_types', array($this, 'register_custom_fields'));
-        add_action('graphql_register_types', array($this, 'register_custom_queries'));
-        add_filter('graphql_post_object_connection_query_args', array($this, 'modify_portfolio_query_args'), 10, 5);
+        add_action('init', [$this, 'registerGraphQLFields']);
+        add_action('graphql_register_types', [$this, 'registerCustomQueries']);
     }
     
     /**
-     * Register custom fields in GraphQL
+     * Register GraphQL fields for custom post types
      */
-    public function register_custom_fields() {
-        // Case Study custom fields
-        register_graphql_field('CaseStudy', 'clientName', array(
-            'type' => 'String',
-            'description' => __('The client name for this case study', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_client_name', true);
-            }
-        ));
-        
-        register_graphql_field('CaseStudy', 'projectUrl', array(
-            'type' => 'String',
-            'description' => __('The URL of the completed project', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_project_url', true);
-            }
-        ));
-        
-        register_graphql_field('CaseStudy', 'duration', array(
-            'type' => 'String',
-            'description' => __('The project duration', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_duration', true);
-            }
-        ));
-        
-        register_graphql_field('CaseStudy', 'challenge', array(
-            'type' => 'String',
-            'description' => __('The main challenge or problem solved', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_challenge', true);
-            }
-        ));
-        
-        register_graphql_field('CaseStudy', 'solution', array(
-            'type' => 'String',
-            'description' => __('The solution implemented', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_solution', true);
-            }
-        ));
-        
-        register_graphql_field('CaseStudy', 'results', array(
-            'type' => 'String',
-            'description' => __('The results and outcomes', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'case_study_results', true);
-            }
-        ));
-        
-        // Portfolio Item custom fields
-        register_graphql_field('PortfolioItem', 'projectUrl', array(
-            'type' => 'String',
-            'description' => __('The URL of the portfolio project', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'portfolio_project_url', true);
-            }
-        ));
-        
-        register_graphql_field('PortfolioItem', 'githubUrl', array(
-            'type' => 'String',
-            'description' => __('The GitHub repository URL', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'portfolio_github_url', true);
-            }
-        ));
-        
-        register_graphql_field('PortfolioItem', 'isFeatured', array(
-            'type' => 'Boolean',
-            'description' => __('Whether this portfolio item is featured', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return (bool) get_post_meta($post->ID, 'portfolio_is_featured', true);
-            }
-        ));
-        
-        register_graphql_field('PortfolioItem', 'completionDate', array(
-            'type' => 'String',
-            'description' => __('The project completion date', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'portfolio_completion_date', true);
-            }
-        ));
-        
-        // Testimonial custom fields
-        register_graphql_field('Testimonial', 'clientName', array(
-            'type' => 'String',
-            'description' => __('The client name for this testimonial', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'testimonial_client_name', true);
-            }
-        ));
-        
-        register_graphql_field('Testimonial', 'clientPosition', array(
-            'type' => 'String',
-            'description' => __('The client position/title', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'testimonial_client_position', true);
-            }
-        ));
-        
-        register_graphql_field('Testimonial', 'clientCompany', array(
-            'type' => 'String',
-            'description' => __('The client company name', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'testimonial_client_company', true);
-            }
-        ));
-        
-        register_graphql_field('Testimonial', 'rating', array(
-            'type' => 'Integer',
-            'description' => __('The rating out of 5', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return (int) get_post_meta($post->ID, 'testimonial_rating', true);
-            }
-        ));
-        
-        register_graphql_field('Testimonial', 'projectType', array(
-            'type' => 'String',
-            'description' => __('The type of project the testimonial is for', 'unobtuse-portfolio'),
-            'resolve' => function($post) {
-                return get_post_meta($post->ID, 'testimonial_project_type', true);
-            }
-        ));
-    }
-    
-    /**
-     * Register custom queries
-     */
-    public function register_custom_queries() {
-        // Featured Portfolio Items Query
-        register_graphql_field('RootQuery', 'featuredPortfolioItems', array(
-            'type' => array('list_of' => 'PortfolioItem'),
-            'description' => __('Get featured portfolio items', 'unobtuse-portfolio'),
-            'args' => array(
-                'first' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of items to retrieve', 'unobtuse-portfolio'),
-                    'defaultValue' => 6,
-                ),
-            ),
-            'resolve' => function($root, $args) {
-                $query_args = array(
-                    'post_type' => 'portfolio_item',
-                    'post_status' => 'publish',
-                    'posts_per_page' => $args['first'],
-                    'meta_query' => array(
-                        array(
-                            'key' => 'portfolio_is_featured',
-                            'value' => '1',
-                            'compare' => '='
-                        )
-                    ),
-                    'orderby' => 'date',
-                    'order' => 'DESC'
-                );
-                
-                $posts = get_posts($query_args);
-                return $posts;
-            }
-        ));
-        
-        // Latest Case Studies Query
-        register_graphql_field('RootQuery', 'latestCaseStudies', array(
-            'type' => array('list_of' => 'CaseStudy'),
-            'description' => __('Get latest case studies', 'unobtuse-portfolio'),
-            'args' => array(
-                'first' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of items to retrieve', 'unobtuse-portfolio'),
-                    'defaultValue' => 6,
-                ),
-                'category' => array(
-                    'type' => 'String',
-                    'description' => __('Filter by category slug', 'unobtuse-portfolio'),
-                ),
-            ),
-            'resolve' => function($root, $args) {
-                $query_args = array(
-                    'post_type' => 'case_study',
-                    'post_status' => 'publish',
-                    'posts_per_page' => $args['first'],
-                    'orderby' => 'date',
-                    'order' => 'DESC'
-                );
-                
-                if (!empty($args['category'])) {
-                    $query_args['tax_query'] = array(
-                        array(
-                            'taxonomy' => 'case_study_category',
-                            'field' => 'slug',
-                            'terms' => $args['category']
-                        )
-                    );
-                }
-                
-                $posts = get_posts($query_args);
-                return $posts;
-            }
-        ));
-        
-        // Random Testimonials Query
-        register_graphql_field('RootQuery', 'randomTestimonials', array(
-            'type' => array('list_of' => 'Testimonial'),
-            'description' => __('Get random testimonials', 'unobtuse-portfolio'),
-            'args' => array(
-                'first' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of items to retrieve', 'unobtuse-portfolio'),
-                    'defaultValue' => 3,
-                ),
-            ),
-            'resolve' => function($root, $args) {
-                $query_args = array(
-                    'post_type' => 'testimonial',
-                    'post_status' => 'publish',
-                    'posts_per_page' => $args['first'],
-                    'orderby' => 'rand'
-                );
-                
-                $posts = get_posts($query_args);
-                return $posts;
-            }
-        ));
-        
-        // Portfolio Stats Query
-        register_graphql_field('RootQuery', 'portfolioStats', array(
-            'type' => 'PortfolioStats',
-            'description' => __('Get portfolio statistics', 'unobtuse-portfolio'),
-            'resolve' => function($root, $args) {
-                $case_studies_count = wp_count_posts('case_study')->publish;
-                $portfolio_count = wp_count_posts('portfolio_item')->publish;
-                $testimonials_count = wp_count_posts('testimonial')->publish;
-                
-                // Get featured portfolio count
-                $featured_count = get_posts(array(
-                    'post_type' => 'portfolio_item',
-                    'post_status' => 'publish',
-                    'meta_query' => array(
-                        array(
-                            'key' => 'portfolio_is_featured',
-                            'value' => '1',
-                            'compare' => '='
-                        )
-                    ),
-                    'fields' => 'ids',
-                    'posts_per_page' => -1
-                ));
-                
-                return array(
-                    'caseStudiesCount' => (int) $case_studies_count,
-                    'portfolioItemsCount' => (int) $portfolio_count,
-                    'testimonialsCount' => (int) $testimonials_count,
-                    'featuredItemsCount' => count($featured_count),
-                );
-            }
-        ));
-        
-        // Register Portfolio Stats type
-        register_graphql_object_type('PortfolioStats', array(
-            'description' => __('Portfolio statistics', 'unobtuse-portfolio'),
-            'fields' => array(
-                'caseStudiesCount' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of published case studies', 'unobtuse-portfolio'),
-                ),
-                'portfolioItemsCount' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of published portfolio items', 'unobtuse-portfolio'),
-                ),
-                'testimonialsCount' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of published testimonials', 'unobtuse-portfolio'),
-                ),
-                'featuredItemsCount' => array(
-                    'type' => 'Int',
-                    'description' => __('Number of featured portfolio items', 'unobtuse-portfolio'),
-                ),
-            ),
-        ));
-    }
-    
-    /**
-     * Modify portfolio query args for filtering
-     */
-    public function modify_portfolio_query_args($query_args, $source, $args, $context, $info) {
-        // Add custom filtering for portfolio items
-        if (isset($args['where']['featured']) && $args['where']['featured'] === true) {
-            $query_args['meta_query'][] = array(
-                'key' => 'portfolio_is_featured',
-                'value' => '1',
-                'compare' => '='
-            );
+    public function registerGraphQLFields() {
+        if (!function_exists('register_graphql_field')) {
+            return;
         }
         
-        return $query_args;
+        $this->registerCaseStudyFields();
+        $this->registerPortfolioItemFields();
+        $this->registerTestimonialFields();
+    }
+    
+    /**
+     * Register Case Study GraphQL fields
+     */
+    private function registerCaseStudyFields() {
+        // Client Name
+        register_graphql_field('CaseStudy', 'clientName', [
+            'type' => 'String',
+            'description' => 'The name of the client for this case study',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'client_name', true);
+            }
+        ]);
+        
+        // Project URL
+        register_graphql_field('CaseStudy', 'projectUrl', [
+            'type' => 'String',
+            'description' => 'The live URL of the project',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'project_url', true);
+            }
+        ]);
+        
+        // Project Duration
+        register_graphql_field('CaseStudy', 'projectDuration', [
+            'type' => 'String',
+            'description' => 'How long the project took to complete',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'project_duration', true);
+            }
+        ]);
+        
+        // Challenge
+        register_graphql_field('CaseStudy', 'challenge', [
+            'type' => 'String',
+            'description' => 'The main challenge of the project',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'challenge', true);
+            }
+        ]);
+        
+        // Solution
+        register_graphql_field('CaseStudy', 'solution', [
+            'type' => 'String',
+            'description' => 'The solution provided for the challenge',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'solution', true);
+            }
+        ]);
+        
+        // Results
+        register_graphql_field('CaseStudy', 'results', [
+            'type' => 'String',
+            'description' => 'The results achieved from the project',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'results', true);
+            }
+        ]);
+    }
+    
+    /**
+     * Register Portfolio Item GraphQL fields
+     */
+    private function registerPortfolioItemFields() {
+        // Project URL
+        register_graphql_field('PortfolioItem', 'projectUrl', [
+            'type' => 'String',
+            'description' => 'The live URL of the project',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'project_url', true);
+            }
+        ]);
+        
+        // GitHub URL
+        register_graphql_field('PortfolioItem', 'githubUrl', [
+            'type' => 'String',
+            'description' => 'The GitHub repository URL',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'github_url', true);
+            }
+        ]);
+        
+        // Is Featured
+        register_graphql_field('PortfolioItem', 'isFeatured', [
+            'type' => 'Boolean',
+            'description' => 'Whether this portfolio item is featured',
+            'resolve' => function($post) {
+                return (bool) get_post_meta($post->ID, 'is_featured', true);
+            }
+        ]);
+        
+        // Completion Date
+        register_graphql_field('PortfolioItem', 'completionDate', [
+            'type' => 'String',
+            'description' => 'When the project was completed',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'completion_date', true);
+            }
+        ]);
+    }
+    
+    /**
+     * Register Testimonial GraphQL fields
+     */
+    private function registerTestimonialFields() {
+        // Client Name
+        register_graphql_field('Testimonial', 'clientName', [
+            'type' => 'String',
+            'description' => 'The name of the client who gave the testimonial',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'client_name', true);
+            }
+        ]);
+        
+        // Client Position
+        register_graphql_field('Testimonial', 'clientPosition', [
+            'type' => 'String',
+            'description' => 'The position/title of the client',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'client_position', true);
+            }
+        ]);
+        
+        // Client Company
+        register_graphql_field('Testimonial', 'clientCompany', [
+            'type' => 'String',
+            'description' => 'The company the client works for',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'client_company', true);
+            }
+        ]);
+        
+        // Rating
+        register_graphql_field('Testimonial', 'rating', [
+            'type' => 'Int',
+            'description' => 'The rating given by the client (1-5)',
+            'resolve' => function($post) {
+                return (int) get_post_meta($post->ID, 'rating', true);
+            }
+        ]);
+        
+        // Project Type
+        register_graphql_field('Testimonial', 'projectType', [
+            'type' => 'String',
+            'description' => 'The type of project the testimonial is about',
+            'resolve' => function($post) {
+                return get_post_meta($post->ID, 'project_type', true);
+            }
+        ]);
+    }
+    
+    /**
+     * Register custom GraphQL queries
+     */
+    public function registerCustomQueries() {
+        if (!function_exists('register_graphql_field')) {
+            return;
+        }
+        
+        $this->registerFeaturedPortfolioQuery();
+        $this->registerLatestCaseStudiesQuery();
+        $this->registerRandomTestimonialsQuery();
+        $this->registerPortfolioStatsQuery();
+    }
+    
+    /**
+     * Register featured portfolio items query
+     */
+    private function registerFeaturedPortfolioQuery() {
+        register_graphql_field('RootQuery', 'featuredPortfolioItems', [
+            'type' => ['list_of' => 'PortfolioItem'],
+            'description' => 'Get featured portfolio items',
+            'args' => [
+                'limit' => [
+                    'type' => 'Int',
+                    'description' => 'Number of items to return',
+                    'defaultValue' => 6
+                ]
+            ],
+            'resolve' => function($source, $args) {
+                $query_args = [
+                    'post_type' => 'portfolio_item',
+                    'post_status' => 'publish',
+                    'posts_per_page' => $args['limit'],
+                    'meta_query' => [
+                        [
+                            'key' => 'is_featured',
+                            'value' => '1',
+                            'compare' => '='
+                        ]
+                    ]
+                ];
+                
+                $query = new WP_Query($query_args);
+                return $query->posts;
+            }
+        ]);
+    }
+    
+    /**
+     * Register latest case studies query
+     */
+    private function registerLatestCaseStudiesQuery() {
+        register_graphql_field('RootQuery', 'latestCaseStudies', [
+            'type' => ['list_of' => 'CaseStudy'],
+            'description' => 'Get latest case studies',
+            'args' => [
+                'limit' => [
+                    'type' => 'Int',
+                    'description' => 'Number of items to return',
+                    'defaultValue' => 3
+                ]
+            ],
+            'resolve' => function($source, $args) {
+                $query_args = [
+                    'post_type' => 'case_study',
+                    'post_status' => 'publish',
+                    'posts_per_page' => $args['limit'],
+                    'orderby' => 'date',
+                    'order' => 'DESC'
+                ];
+                
+                $query = new WP_Query($query_args);
+                return $query->posts;
+            }
+        ]);
+    }
+    
+    /**
+     * Register random testimonials query
+     */
+    private function registerRandomTestimonialsQuery() {
+        register_graphql_field('RootQuery', 'randomTestimonials', [
+            'type' => ['list_of' => 'Testimonial'],
+            'description' => 'Get random testimonials',
+            'args' => [
+                'limit' => [
+                    'type' => 'Int',
+                    'description' => 'Number of items to return',
+                    'defaultValue' => 3
+                ]
+            ],
+            'resolve' => function($source, $args) {
+                $query_args = [
+                    'post_type' => 'testimonial',
+                    'post_status' => 'publish',
+                    'posts_per_page' => $args['limit'],
+                    'orderby' => 'rand'
+                ];
+                
+                $query = new WP_Query($query_args);
+                return $query->posts;
+            }
+        ]);
+    }
+    
+    /**
+     * Register portfolio stats query
+     */
+    private function registerPortfolioStatsQuery() {
+        register_graphql_field('RootQuery', 'portfolioStats', [
+            'type' => 'PortfolioStats',
+            'description' => 'Get portfolio statistics',
+            'resolve' => function() {
+                $case_studies_count = wp_count_posts('case_study')->publish;
+                $portfolio_items_count = wp_count_posts('portfolio_item')->publish;
+                $testimonials_count = wp_count_posts('testimonial')->publish;
+                
+                return [
+                    'caseStudiesCount' => $case_studies_count,
+                    'portfolioItemsCount' => $portfolio_items_count,
+                    'testimonialsCount' => $testimonials_count,
+                    'totalProjects' => $case_studies_count + $portfolio_items_count
+                ];
+            }
+        ]);
+        
+        // Register the PortfolioStats type
+        register_graphql_object_type('PortfolioStats', [
+            'description' => 'Portfolio statistics',
+            'fields' => [
+                'caseStudiesCount' => [
+                    'type' => 'Int',
+                    'description' => 'Number of published case studies'
+                ],
+                'portfolioItemsCount' => [
+                    'type' => 'Int',
+                    'description' => 'Number of published portfolio items'
+                ],
+                'testimonialsCount' => [
+                    'type' => 'Int',
+                    'description' => 'Number of published testimonials'
+                ],
+                'totalProjects' => [
+                    'type' => 'Int',
+                    'description' => 'Total number of projects (case studies + portfolio items)'
+                ]
+            ]
+        ]);
     }
 } 
