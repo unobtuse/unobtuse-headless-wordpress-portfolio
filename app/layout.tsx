@@ -5,7 +5,11 @@ import './globals.css'
 import Navigation from '@/components/Navigation'
 import Footer from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'], variable: '--font-sans' })
+const inter = Inter({ 
+  subsets: ['latin'], 
+  variable: '--font-sans',
+  display: 'swap',
+})
 
 export const metadata: Metadata = {
   title: 'Unobtuse - WordPress Development & Design',
@@ -26,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased">
+      <body className="min-h-screen bg-background antialiased">
         <Navigation />
         <main className="min-h-screen">
           {children}

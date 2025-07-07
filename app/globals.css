@@ -54,7 +54,10 @@
     @apply border-border;
   }
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground font-sans;
+  }
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-heading;
   }
 }
 
@@ -62,6 +65,10 @@ html {
   scroll-behavior: smooth;
 }
 
-body {
+/* Additional typography styles */
+.font-heading {
   font-family: var(--font-sans);
+  font-weight: 600;
+  line-height: 1.2;
+  letter-spacing: -0.025em;
 } 
