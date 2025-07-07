@@ -88,4 +88,7 @@ jspm_packages/
 .vercel
 
 # Turbo
-.turbo 
+.turbo
+
+# Cursor AI rules (contains project-specific instructions)
+.cursorrules
