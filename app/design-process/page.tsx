@@ -2,64 +2,96 @@
 
 import React from 'react'
 import { motion } from 'framer-motion'
-import { Search, Lightbulb, Palette, Code, TestTube, Rocket } from 'lucide-react'
+import { Search, FileText, Code, Rocket, HeartHandshake, DollarSign, Users, Zap } from 'lucide-react'
 
 const DesignProcessPage = () => {
   const processSteps = [
     {
       icon: Search,
-      title: 'Research & Discovery',
-      description: 'Understanding user needs, business goals, and market landscape through comprehensive research and stakeholder interviews.',
-      activities: ['User interviews', 'Competitive analysis', 'Market research', 'Stakeholder workshops']
+      title: 'Discovery & Consultation',
+      description: 'Our journey begins with a comprehensive consultation, where we take the time to truly understand your project and define your specific goals.',
+      activities: [
+        'Purpose & Goals Discussion',
+        'Timeline Planning',
+        'Inspiration & Competition Analysis',
+        'Current State Analysis',
+        'Assets & Content Assessment',
+        'Monetization & Marketing Strategy',
+        'Branding Evaluation',
+        'Technical Integrations Planning'
+      ]
     },
     {
-      icon: Lightbulb,
-      title: 'Ideation & Strategy',
-      description: 'Generating creative solutions and defining the strategic direction based on research insights.',
-      activities: ['Brainstorming sessions', 'User personas', 'Journey mapping', 'Information architecture']
-    },
-    {
-      icon: Palette,
-      title: 'Design & Prototyping',
-      description: 'Creating visual designs, interactive prototypes, and design systems that bring ideas to life.',
-      activities: ['Wireframing', 'Visual design', 'Prototyping', 'Design systems']
-    },
-    {
-      icon: TestTube,
-      title: 'Testing & Validation',
-      description: 'Validating design decisions through user testing and iterative improvements.',
-      activities: ['Usability testing', 'A/B testing', 'Accessibility audit', 'Performance testing']
+      icon: FileText,
+      title: 'Strategy & Proposal',
+      description: 'Following our consultation, we move into detailed planning and research to develop a comprehensive strategy tailored to your needs.',
+      activities: [
+        'In-depth Market Research',
+        'Custom SEO Strategy',
+        'Technical Evaluation',
+        'Milestone Planning',
+        'Value Assessment',
+        'Detailed Proposal Creation'
+      ]
     },
     {
       icon: Code,
-      title: 'Development & Implementation',
-      description: 'Translating designs into functional, responsive, and optimized web experiences.',
-      activities: ['Frontend development', 'CMS integration', 'Performance optimization', 'Quality assurance']
+      title: 'Design & Development',
+      description: 'With the strategy locked in, our team gets to work building your WordPress website with attention to every detail.',
+      activities: [
+        'Hosting & Infrastructure Setup',
+        'Third-Party Integrations',
+        'Analytics & Tracking Configuration',
+        'WordPress Installation & Security',
+        'Logo & Branding Implementation',
+        'Custom Development & Testing'
+      ]
     },
     {
       icon: Rocket,
-      title: 'Launch & Optimization',
-      description: 'Deploying the final product and continuously optimizing based on real-world usage data.',
-      activities: ['Deployment', 'Analytics setup', 'Performance monitoring', 'Ongoing optimization']
+      title: 'Launch & Delivery',
+      description: 'As we approach launch, we ensure everything is perfect and provide you with the knowledge to manage your new site.',
+      activities: [
+        'Final Review & Testing',
+        'Training & Handover',
+        'Go Live Process',
+        'Performance Monitoring',
+        'Quality Assurance'
+      ]
+    },
+    {
+      icon: HeartHandshake,
+      title: 'Ongoing Support & Growth',
+      description: 'Our partnership doesn\'t end at launch! We offer ongoing services to help your website thrive and grow over time.',
+      activities: [
+        'Content Creation Services',
+        'Maintenance & Updates',
+        'Technical Support',
+        'Marketing Campaign Management',
+        'Continuous Optimization'
+      ]
     }
   ]
 
-  const principles = [
+  const benefits = [
     {
-      title: 'User-Centered Design',
-      description: 'Every design decision is made with the end user in mind, ensuring intuitive and meaningful experiences.'
+      icon: Users,
+      title: 'Collaborative Approach',
+      description: 'Open communication throughout the build - your feedback and new ideas are always welcome.'
     },
     {
-      title: 'Accessibility First',
-      description: 'Designing inclusive experiences that work for everyone, regardless of abilities or circumstances.'
-    },
-    {
+      icon: Zap,
       title: 'Performance Focused',
-      description: 'Optimizing for speed and efficiency without compromising on visual appeal or functionality.'
+      description: 'Advanced caching, security layers, and optimization ensure your site runs fast and secure.'
     },
     {
-      title: 'Mobile-First Approach',
-      description: 'Starting with mobile constraints to ensure exceptional experiences across all devices.'
+      icon: DollarSign,
+      title: '100% Satisfaction Guaranteed',
+      description: 'Your satisfaction is always guaranteed. We work until you\'re completely happy with the results.'
+    },
+    {
+      title: 'Transparent Process',
+      description: 'Clear milestones, deliverables, and transparent quotes so you know exactly what to expect.'
     }
   ]
 
@@ -81,10 +113,10 @@ const DesignProcessPage = () => {
             animate="animate"
           >
             <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold mb-6">
-              Design Process
+              Our Proven WordPress Development Process
             </h1>
-            <p className="text-xl sm:text-2xl mb-8 text-purple-100 max-w-3xl mx-auto">
-              A systematic approach to creating user-centered digital experiences that drive results
+            <p className="text-xl sm:text-2xl mb-8 text-purple-100 max-w-4xl mx-auto">
+              At Unobtuse, we believe that every successful website starts with a clear, collaborative process tailored to your unique needs. Here's what you can expect when partnering with us to bring your vision to life.
             </p>
           </motion.div>
         </div>
@@ -101,10 +133,10 @@ const DesignProcessPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              The Design Journey
+              The Development Journey
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Six key phases that ensure every project delivers exceptional results
+              Five comprehensive phases that ensure every project delivers exceptional results
             </p>
           </motion.div>
 
@@ -162,7 +194,7 @@ const DesignProcessPage = () => {
         </div>
       </section>
 
-      {/* Design Principles */}
+      {/* Benefits & Values */}
       <section className="py-20 bg-muted">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
@@ -173,15 +205,15 @@ const DesignProcessPage = () => {
             viewport={{ once: true }}
           >
             <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Design Principles
+              Why Choose Our Process
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Core principles that guide every design decision and ensure consistent quality
+              Our proven methodology ensures exceptional results and a smooth experience from start to finish
             </p>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            {principles.map((principle, index) => (
+            {benefits.map((benefit, index) => (
               <motion.div
                 key={index}
                 className="bg-background border border-border rounded-lg p-6 hover:shadow-lg transition-shadow duration-200"
@@ -191,11 +223,18 @@ const DesignProcessPage = () => {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                <h3 className="text-xl font-semibold text-foreground mb-3">
-                  {principle.title}
-                </h3>
+                <div className="flex items-center mb-4">
+                  {benefit.icon && (
+                    <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg mr-3">
+                      <benefit.icon className="h-5 w-5 text-primary" />
+                    </div>
+                  )}
+                  <h3 className="text-xl font-semibold text-foreground">
+                    {benefit.title}
+                  </h3>
+                </div>
                 <p className="text-muted-foreground">
-                  {principle.description}
+                  {benefit.description}
                 </p>
               </motion.div>
             ))}
@@ -203,43 +242,32 @@ const DesignProcessPage = () => {
         </div>
       </section>
 
-      {/* Tools & Methods */}
+      {/* Call to Action */}
       <section className="py-20 bg-background">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            className="text-center mb-16"
+            className="text-center"
             variants={fadeInUp}
             initial="initial"
             whileInView="animate"
             viewport={{ once: true }}
           >
-            <h2 className="text-3xl sm:text-4xl font-bold text-foreground mb-4">
-              Tools & Methodologies
-            </h2>
-            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Industry-leading tools and proven methodologies for exceptional results
-            </p>
-          </motion.div>
-
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {[
-              'Figma', 'Adobe Creative Suite', 'Sketch', 'InVision',
-              'Miro', 'Hotjar', 'Google Analytics', 'Optimal Workshop',
-              'UsabilityHub', 'Maze', 'Axure RP', 'Principle'
-            ].map((tool, index) => (
-              <motion.div
-                key={index}
-                className="bg-card border border-border rounded-lg p-4 text-center hover:border-primary/50 transition-colors"
-                variants={fadeInUp}
-                initial="initial"
-                whileInView="animate"
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.05 }}
+            <div className="bg-gradient-to-r from-purple-600 to-pink-600 rounded-2xl p-12 text-white">
+              <h2 className="text-3xl sm:text-4xl font-bold mb-6">
+                Ready to Get Started?
+              </h2>
+              <p className="text-xl mb-8 text-purple-100 max-w-2xl mx-auto">
+                Let's create something exceptional together. Contact us today to begin your WordPress development journey.
+              </p>
+              <motion.button
+                className="bg-white text-purple-600 px-8 py-4 rounded-lg font-semibold text-lg hover:bg-purple-50 transition-colors"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                <span className="text-foreground font-medium">{tool}</span>
-              </motion.div>
-            ))}
-          </div>
+                Start Your Project
+              </motion.button>
+            </div>
+          </motion.div>
         </div>
       </section>
     </div>
