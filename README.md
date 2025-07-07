@@ -24,8 +24,8 @@ Before you begin, ensure you have the following installed:
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/your-username/unobtuse-portfolio.git
-   cd unobtuse-portfolio
+   git clone https://github.com/unobtuse/unobtuse-headless-wordpress-portfolio.git
+   cd unobtuse-headless-wordpress-portfolio
    ```
 
 2. **Install dependencies**
@@ -41,7 +41,7 @@ Before you begin, ensure you have the following installed:
    - Update the variables in `.env.local`:
      ```
      WORDPRESS_API_URL=https://your-wordpress-site.com/graphql
-     WORDPRESS_API_KEY=your-api-key-here
+     NEXT_PUBLIC_WORDPRESS_API_URL=https://your-wordpress-site.com/graphql
      ```
 
 4. **Run the development server**
@@ -51,11 +51,13 @@ Before you begin, ensure you have the following installed:
 
 5. **Open your browser**
    Navigate to [http://localhost:3000](http://localhost:3000) to see the application.
+   
+   **Note:** If port 3000 is in use, Next.js will automatically use the next available port (e.g., 3001).
 
 ## 🏗️ Project Structure
 
 ```
-unobtuse-portfolio/
+unobtuse-headless-wordpress-portfolio/
 ├── app/                    # Next.js 14 App Router
 │   ├── about/             # About Gabriel page
 │   ├── case-studies/      # Case studies page
@@ -153,8 +155,8 @@ This project is designed to work with a headless WordPress setup:
 
 | Variable | Description | Required |
 |----------|-------------|----------|
-| `WORDPRESS_API_URL` | WordPress GraphQL endpoint | Yes |
-| `WORDPRESS_API_KEY` | WordPress API authentication key | No |
+| `WORDPRESS_API_URL` | WordPress GraphQL endpoint (server-side) | Yes |
+| `NEXT_PUBLIC_WORDPRESS_API_URL` | WordPress GraphQL endpoint (client-side) | Yes |
 
 ## 🤝 Contributing
 
@@ -180,7 +182,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 For support or questions:
 - Email: hello@unobtuse.com
-- GitHub Issues: [Create an issue](https://github.com/your-username/unobtuse-portfolio/issues)
+- GitHub Issues: [Create an issue](https://github.com/unobtuse/unobtuse-headless-wordpress-portfolio/issues)
 
 ---
 
