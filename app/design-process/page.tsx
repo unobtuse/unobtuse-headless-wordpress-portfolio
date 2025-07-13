@@ -123,7 +123,7 @@ const DesignProcessPage = () => {
       </section>
 
       {/* Process Steps */}
-      <section className="py-20 bg-background">
+      <section className="py-20 bg-background relative">
         <div className="container mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             className="text-center mb-16"
@@ -140,56 +140,63 @@ const DesignProcessPage = () => {
             </p>
           </motion.div>
 
-          <div className="space-y-16">
-            {processSteps.map((step, index) => {
-              const IconComponent = step.icon
-              const isEven = index % 2 === 0
-              
-              return (
-                <motion.div
-                  key={index}
-                  className={`flex flex-col lg:flex-row items-center gap-8 ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
-                  variants={fadeInUp}
-                  initial="initial"
-                  whileInView="animate"
-                  viewport={{ once: true }}
-                  transition={{ delay: index * 0.2 }}
-                >
-                  <div className="lg:w-1/2">
-                    <div className="bg-card border border-border rounded-lg p-8 hover:shadow-lg transition-shadow duration-200">
-                      <div className="flex items-center mb-4">
-                        <div className="flex items-center justify-center w-12 h-12 bg-primary/10 rounded-lg mr-4">
-                          <IconComponent className="h-6 w-6 text-primary" />
-                        </div>
-                        <div className="text-sm font-semibold text-primary">
-                          Step {index + 1}
-                        </div>
-                      </div>
-                      <h3 className="text-2xl font-bold text-foreground mb-4">
-                        {step.title}
-                      </h3>
-                      <p className="text-muted-foreground mb-6">
-                        {step.description}
-                      </p>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
-                        {step.activities.map((activity, actIndex) => (
-                          <div key={actIndex} className="flex items-center text-sm text-muted-foreground">
-                            <div className="w-2 h-2 bg-primary rounded-full mr-2 flex-shrink-0" />
-                            {activity}
+          {/* Vertical Timeline Line */}
+          <div className="relative">
+            <div className="absolute left-1/2 w-0.5 h-full bg-border transform -translate-x-1/2 hidden lg:block" />
+
+            <div className="space-y-16 lg:space-y-24">
+              {processSteps.map((step, index) => {
+                const IconComponent = step.icon
+                const isEven = index % 2 === 0
+                
+                return (
+                  <motion.div
+                    key={index}
+                    className={`relative flex flex-col lg:flex-row items-start lg:items-center gap-8 ${isEven ? 'lg:flex-row' : 'lg:flex-row-reverse'}`}
+                    variants={fadeInUp}
+                    initial="initial"
+                    whileInView="animate"
+                    viewport={{ once: true }}
+                    transition={{ delay: index * 0.2 }}
+                  >
+                    {/* Step Content */}
+                    <div className={`w-full lg:w-5/12 ${isEven ? 'lg:pr-8' : 'lg:pl-8'}`}>
+                      <div className="bg-card border border-border rounded-lg p-6 hover:shadow-lg transition-shadow duration-200">
+                        <div className="flex items-center mb-4">
+                          <div className="flex items-center justify-center w-10 h-10 bg-primary/10 rounded-lg mr-3">
+                            <IconComponent className="h-5 w-5 text-primary" />
                           </div>
-                        ))}
+                          <h3 className="text-xl font-bold text-foreground">
+                            {step.title}
+                          </h3>
+                        </div>
+                        <p className="text-muted-foreground mb-4">
+                          {step.description}
+                        </p>
+                        <ul className="space-y-2">
+                          {step.activities.map((activity, actIndex) => (
+                            <li key={actIndex} className="flex items-start text-sm text-muted-foreground">
+                              <div className="w-1.5 h-1.5 bg-primary rounded-full mr-2 mt-2 flex-shrink-0" />
+                              {activity}
+                            </li>
+                          ))}
+                        </ul>
                       </div>
                     </div>
-                  </div>
-                  
-                  <div className="lg:w-1/2">
-                    <div className="w-16 h-16 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-2xl mx-auto lg:mx-0">
-                      {index + 1}
+
+                    {/* Timeline Node */}
+                    <div className="w-full lg:w-2/12 flex justify-center lg:absolute lg:left-1/2 lg:transform lg:-translate-x-1/2 z-10">
+                      <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground font-bold text-xl ring-4 ring-background">
+                        {index + 1}
+                      </div>
                     </div>
-                  </div>
-                </motion.div>
-              )
-            })}
+
+                    {/* Empty Spacer for alternating layout */}
+                    <div className="hidden lg:block lg:w-5/12" />
+                  </motion.div>
+                )
+              })}
+            </div>
           </div>
         </div>
       </section>

@@ -55,7 +55,7 @@ const Navigation = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:block">
-            <div className="ml-10 flex items-baseline space-x-4">
+            <div className="ml-10 flex items-center space-x-4">
               {navigationItems.map((item) => (
                 <Link
                   key={item.href}
@@ -67,7 +67,7 @@ const Navigation = () => {
               ))}
               <button
                 onClick={toggleTheme}
-                className="p-2 rounded-md text-foreground hover:text-primary hover:bg-accent transition-colors duration-200"
+                className="p-2 rounded-md text-foreground hover:text-primary hover:bg-accent transition-colors duration-200 flex items-center"
                 aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
               >
                 {theme === 'light' ? (
