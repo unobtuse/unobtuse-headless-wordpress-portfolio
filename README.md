@@ -170,6 +170,44 @@ This project is designed to work with a headless WordPress setup:
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
+## 📋 Changelog
+
+### v1.1.1 - 2025-01-13
+
+#### 📝 Documentation & Workflow Updates
+- **Added changelog workflow** to .cursorrules for consistent commit documentation
+- **Created comprehensive changelog** documenting all recent changes
+- **Updated git workflow rules** to require README changelog updates with each commit
+- **Established version tracking** with proper markdown formatting
+
+### v1.1.0 - 2025-01-13
+
+#### 🌙 Dark Mode Implementation (commit: 87c1810)
+- **Added complete dark mode theme system** with toggle functionality
+- **Theme Context Provider** with localStorage persistence and system preference detection
+- **Dynamic logo switching** between black (light) and white (dark) variants
+- **Theme toggle buttons** in desktop and mobile navigation with sun/moon icons
+- **Hydration protection** to prevent flash of unstyled content
+
+#### 🔧 Development Environment Updates (commit: 87c1810)
+- **Added EC2 development environment** configuration to .cursorrules
+- **WordPress CLI management** instructions and common commands
+- **Site architecture clarification** (frontend vs backend URLs)
+- **Development server management** rules for process handling
+- **WordPress URL configuration** fixed for subdirectory installation
+
+#### 🎨 UI/UX Improvements (commit: e14eabd)
+- **Redesigned Design Process timeline** with proper vertical layout
+- **Connected timeline nodes** with alternating left/right content
+- **Fixed navigation alignment** issues (items-baseline → items-center)
+- **Enhanced responsive behavior** with improved spacing
+- **Visual consistency** improvements across all components
+
+#### 📝 Documentation Updates
+- **Updated .cursorrules** with comprehensive development guidelines
+- **Added changelog workflow** to git commit process
+- **Environment variable examples** for beta.unobtuse.com setup
+
 ## 🙏 Acknowledgments
 
 - **shadcn/ui** for the component library

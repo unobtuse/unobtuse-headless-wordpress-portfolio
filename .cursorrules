@@ -118,6 +118,13 @@
 - Provide a clear summary of what was implemented before asking about committing.
 - If the user wants to commit, suggest appropriate commit messages that describe the changes made.
 - Always run `npm run type-check` and `npm run lint` before committing to ensure code quality.
+- ALWAYS update the README.md with a changelog entry when committing changes.
+- Changelog entries should include:
+  - Date and version/commit reference
+  - Summary of changes made
+  - New features, bug fixes, or improvements
+  - Any breaking changes or migration notes
+- Format changelog entries consistently with markdown formatting.
 
 ###############################################
 # Example Tech Stack
