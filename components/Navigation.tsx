@@ -3,8 +3,9 @@
 import React, { useState } from 'react'
 import Link from 'next/link'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Menu, X } from 'lucide-react'
+import { Menu, X, Sun, Moon } from 'lucide-react'
 import Image from 'next/image'
+import { useTheme } from '@/lib/theme-context'
 
 const navigationItems = [
   { href: '/', label: 'Home' },
@@ -17,6 +18,7 @@ const navigationItems = [
 
 const Navigation = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const { theme, toggleTheme } = useTheme()
 
   const handleToggleMobileMenu = () => {
     setIsMobileMenuOpen(!isMobileMenuOpen)
@@ -43,7 +45,7 @@ const Navigation = () => {
             aria-label="Unobtuse home"
           >
             <Image
-              src="/logos/Black_Unobtuse_icon_wide.svg"
+              src={theme === 'light' ? "/logos/Black_Unobtuse_icon_wide.svg" : "/logos/White_Unobtuse_icon_wide_1.svg"}
               alt="Unobtuse Logo"
               width={120}
               height={32}
@@ -63,11 +65,33 @@ const Navigation = () => {
                   {item.label}
                 </Link>
               ))}
+              <button
+                onClick={toggleTheme}
+                className="p-2 rounded-md text-foreground hover:text-primary hover:bg-accent transition-colors duration-200"
+                aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+              >
+                {theme === 'light' ? (
+                  <Moon className="h-5 w-5" />
+                ) : (
+                  <Sun className="h-5 w-5" />
+                )}
+              </button>
             </div>
           </div>
 
           {/* Mobile menu button */}
-          <div className="md:hidden">
+          <div className="md:hidden flex items-center space-x-2">
+            <button
+              onClick={toggleTheme}
+              className="p-2 rounded-md text-foreground hover:text-primary hover:bg-accent transition-colors duration-200"
+              aria-label={theme === 'light' ? 'Switch to dark mode' : 'Switch to light mode'}
+            >
+              {theme === 'light' ? (
+                <Moon className="h-5 w-5" />
+              ) : (
+                <Sun className="h-5 w-5" />
+              )}
+            </button>
             <button
               onClick={handleToggleMobileMenu}
               onKeyDown={handleKeyDown}

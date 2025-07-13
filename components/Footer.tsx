@@ -1,9 +1,13 @@
+'use client'
+
 import React from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
+import { useTheme } from '@/lib/theme-context'
 
 const Footer = () => {
   const currentYear = new Date().getFullYear()
+  const { theme } = useTheme()
 
   return (
     <footer className="bg-muted border-t border-border">
@@ -17,7 +21,7 @@ const Footer = () => {
               aria-label="Unobtuse home"
             >
               <Image
-                src="/logos/Black_Unobtuse_icon_wide.svg"
+                src={theme === 'light' ? "/logos/Black_Unobtuse_icon_wide.svg" : "/logos/White_Unobtuse_icon_wide_1.svg"}
                 alt="Unobtuse Logo"
                 width={150}
                 height={40}

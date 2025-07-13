@@ -23,13 +23,13 @@
 ###############################################
 
 - The project must be a public repository on GitHub.
-- Include a complete README.md with clear setup instructions (install dependencies, configure environment variables, connect to WPGraphQL endpoint, run locally, deploy to Vercel/Netlify).
+- Include a complete README.md with clear setup instructions (install dependencies, configure environment variables, connect to WPGraphQL endpoint, run on EC2 instance, deploy to Vercel/Netlify).
 - Include example .env files, scripts, and all configuration for smooth onboarding.
 - Use only open source libraries; ensure all dependencies are in package.json.
 - The code must run with `npm install` and `npm run dev` without errors.
 - Avoid hardcoded values. All environment-specific settings must use environment variables.
 - Ensure WPGraphQL API URL is settable via environment variable.
-- Provide a script or documentation for deploying (Vercel, Netlify, or similar).
+- Provide a script or documentation for deploying (Vercel, Netlify, or similar) and running on EC2 instance.
 
 ###############################################
 # Code Implementation Guidelines
@@ -70,6 +70,54 @@
 - Run linting and formatting (eslint, prettier) on all code before commit.
 - Run accessibility checks (axe, Lighthouse, etc.) before deployment.
 - Perform end-to-end testing of all critical flows before marking as complete.
+
+###############################################
+# Development Server Management Rules
+###############################################
+
+- ALWAYS check for and terminate any existing development servers before starting new ones.
+- Use `ps aux | grep -E "next" | grep -v grep` to check for running Next.js servers.
+- Kill existing server processes before running `npm run dev` or `npm run build`.
+- Prevent port conflicts by ensuring only one development server runs at a time.
+- After terminating servers, wait a moment before starting new ones to avoid race conditions.
+
+###############################################
+# EC2 Development Environment
+###############################################
+
+- Development is done on Amazon EC2 instance, not local computer.
+- **Headless Next.js App**: https://beta.unobtuse.com/ (the main public site)
+- **WordPress Backend**: https://beta.unobtuse.com/wordpress (admin/backend only)
+- **GraphQL Endpoint**: https://beta.unobtuse.com/wordpress/graphql
+- Development server runs on localhost:3000 but accessible via public URL.
+- All environment variables should reflect the beta.unobtuse.com/wordpress backend.
+
+###############################################
+# WordPress CLI Management
+###############################################
+
+- WordPress installation is located at `/var/www/html/wordpress` on the same EC2 instance.
+- WP CLI is available and can be used to manage the WordPress installation during development.
+- To interact with WordPress via CLI, use: `cd /var/www/html/wordpress && wp [command]`
+- Common WP CLI commands for development:
+  - `wp core version` - Check WordPress version
+  - `wp plugin list` - List installed plugins
+  - `wp plugin install [plugin-name] --activate` - Install and activate plugins
+  - `wp user list` - List WordPress users
+  - `wp post list` - List posts
+  - `wp option get siteurl` - Get site URL
+  - `wp option update siteurl https://beta.unobtuse.com/wordpress` - Update site URL
+  - `wp cache flush` - Clear WordPress cache
+- Always run WP CLI commands from `/var/www/html/wordpress` directory for proper WordPress context.
+
+###############################################
+# Git Workflow Rules
+###############################################
+
+- After every successful implementation or major feature completion, ask the user if they want to commit changes.
+- Provide a clear summary of what was implemented before asking about committing.
+- If the user wants to commit, suggest appropriate commit messages that describe the changes made.
+- Always run `npm run type-check` and `npm run lint` before committing to ensure code quality.
 
 ###############################################
 # Example Tech Stack
@@ -116,7 +164,7 @@
 - ✅ GraphQL queries structure in lib/queries.ts
 - ✅ TypeScript interfaces for WordPress data
 - ✅ Test connection functionality working
-- ✅ Successfully connected to WordPress at beta.unobtuse.com
+- ✅ Successfully connected to WordPress backend at https://beta.unobtuse.com/wordpress
 
 ### Assets & Configuration
 - ✅ Logo assets moved to public/logos/ (black/white variants)
@@ -137,10 +185,16 @@
 - ✅ TypeScript: No type errors
 - ✅ ESLint: All linting issues resolved
 - ✅ Build: Production build successful
-- ✅ Development: Running on localhost:3001 (or 3000 if available)
+- ✅ Development: Running on EC2 instance at https://beta.unobtuse.com/ (localhost:3000)
 - ✅ All 6 pages load and compile successfully
 
 ## 📝 IMPORTANT NOTES FOR FUTURE DEVELOPMENT
+
+### Site Architecture (CRITICAL - READ CAREFULLY)
+- **Frontend (Headless Next.js)**: https://beta.unobtuse.com/ - The main public website
+- **Backend (WordPress)**: https://beta.unobtuse.com/wordpress - Admin panel and CMS backend
+- **GraphQL API**: https://beta.unobtuse.com/wordpress/graphql - Data endpoint for headless content
+- **DO NOT CONFUSE**: The root domain serves the Next.js app, /wordpress serves the WordPress backend
 
 ### WordPress Content Integration
 - Mock data currently used for case studies and portfolio items
@@ -150,7 +204,7 @@
 ### Environment Variables Required
 - WORDPRESS_API_URL: Server-side GraphQL endpoint
 - NEXT_PUBLIC_WORDPRESS_API_URL: Client-side GraphQL endpoint
-- Both should point to: https://your-wordpress-site.com/graphql
+- Both should point to: https://beta.unobtuse.com/wordpress/graphql
 
 ### Deployment Ready For
 - ✅ Vercel (recommended)
